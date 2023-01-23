@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      ORG_GRADLE_PROJECT_onstructiveUsername: ${{ secrets.M2_USER }}
+      ORG_GRADLE_PROJECT_onstructivePassword: ${{ secrets.M2_PWD }}
+
+    services:
+      smocker:
+        image: thiht/smocker:0.18.2
+        ports:
+          - 8080:8080
+          - 8081:8081
+
+    permissions: read-all
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'zulu'
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+
+    - name: Validate Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        arguments: -s check publishToMavenLocal

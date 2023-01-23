@@ -1,0 +1,58 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
+    id("io.micronaut.application") version "3.7.0" apply false
+    id("io.micronaut.library") version "3.7.0" apply false
+
+    id 'ch.onstructive.gradle.release' version "${onstructiveGradlePluginVersion}" apply false
+    id 'ch.onstructive.gradle.codestyle' version "${onstructiveGradlePluginVersion}" apply false
+}
+
+subprojects { subproject ->
+
+    apply plugin: 'groovy'
+    if (subproject.name == "${rootProject.name}-tests") {
+        apply plugin: 'io.micronaut.application'
+
+    } else {
+        apply plugin: 'io.micronaut.library'
+    }
+    group = "io.wangler.micronaut.smocker"
+
+    apply plugin: "ch.onstructive.gradle.codestyle"
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    micronaut {
+        runtime("netty")
+        testRuntime("spock2")
+        processing {
+            incremental(true)
+            annotations("io.wangler.micronaut.smocker.*")
+        }
+    }
+
+    dependencies {
+        annotationProcessor("io.micronaut:micronaut-http-validation")
+        annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+        implementation("io.micronaut:micronaut-http-client")
+        implementation("io.micronaut.serde:micronaut-serde-jackson")
+        implementation("jakarta.annotation:jakarta.annotation-api")
+        runtimeOnly("ch.qos.logback:logback-classic:1.4.5")
+        implementation("io.micronaut:micronaut-validation")
+
+    }
+
+    configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute(module("io.micronaut:micronaut-jackson-databind"))
+                    .using(module("io.micronaut.serde:micronaut-serde-jackson:1.5.0"))
+        }
+    }
+}
+
+
+

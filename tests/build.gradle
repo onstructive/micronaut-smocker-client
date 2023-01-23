@@ -1,0 +1,10 @@
+graalvmNative.toolchainDetection = false
+
+
+application {
+    mainClass.set("io.wangler.micronaut.smocker.Application")
+}
+
+dependencies {
+    testImplementation project(":${rootProject.name}-client")
+}

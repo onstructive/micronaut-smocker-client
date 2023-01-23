@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'onstructive'
+            url repoUrl
+            credentials(PasswordCredentials)
+            authentication {
+                digest(BasicAuthentication)
+            }
+        }
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        maven {
+            name = 'onstructive'
+            url repoUrl
+            credentials(PasswordCredentials)
+            authentication {
+                digest(BasicAuthentication)
+            }
+        }
+    }
+}
+
+rootProject.name="micronaut-smocker-http-client"
+
+include 'client'
+include 'tests'
+
+rootProject.children.each { it.name = "${rootProject.name}-${it.name}" }
