@@ -1,5 +1,9 @@
 # Micronaut Http Client for Smocker
 
+## About Smocker
+
+Please find all information and documentation at https://smocker.dev/
+
 ## Run Smocker
 
 ```shell
