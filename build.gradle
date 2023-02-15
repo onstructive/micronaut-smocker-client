@@ -1,6 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
-    id("io.micronaut.application") version "3.7.0" apply false
+    id("io.micronaut.application") version "3.7.1" apply false
     id("io.micronaut.library") version "3.7.0" apply false
 
     id 'ch.onstructive.gradle.release' version "${onstructiveGradlePluginVersion}" apply false
