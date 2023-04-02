@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  smocker:
+    image: thiht/smocker:0.18.2
+    platform: linux/amd64
+    container_name: smocker
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8081"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

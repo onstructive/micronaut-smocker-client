@@ -1,5 +1,6 @@
 package io.wangler.micronaut.smocker
 
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
@@ -130,7 +131,7 @@ class SmockerClientSpec extends Specification {
         res.message() == 'Mocks registered successfully'
 
         when:
-        String response = httpClient.toBlocking().retrieve(io.micronaut.http.HttpRequest.GET(PATH).header(ACCEPT, TEXT_PLAIN))
+        String response = httpClient.toBlocking().retrieve(HttpRequest.GET(PATH).header(ACCEPT, TEXT_PLAIN))
 
         then:
         response == 'Hello World'

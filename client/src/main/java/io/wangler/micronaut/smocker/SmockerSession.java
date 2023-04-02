@@ -23,8 +23,8 @@
  */
 package io.wangler.micronaut.smocker;
 
-import io.micronaut.serde.annotation.Serdeable;
+import io.micronaut.core.annotation.Introspected;
 import java.time.Instant;
 
-@Serdeable
+@Introspected
 public record SmockerSession(String id, String name, Instant date) {}

@@ -23,7 +23,7 @@
  */
 package io.wangler.micronaut.smocker;
 
-import io.micronaut.serde.annotation.Serdeable;
+import io.micronaut.core.annotation.Introspected;
 
-@Serdeable
+@Introspected
 public record SmockerResponse(String message) {}

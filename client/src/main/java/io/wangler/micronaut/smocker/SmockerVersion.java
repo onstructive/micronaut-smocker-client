@@ -24,9 +24,9 @@
 package io.wangler.micronaut.smocker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.serde.annotation.Serdeable;
+import io.micronaut.core.annotation.Introspected;
 
-@Serdeable
+@Introspected
 public record SmockerVersion(
     @JsonProperty("app_name") String appName,
     @JsonProperty("build_version") String buildVersion,
