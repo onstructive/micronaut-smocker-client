@@ -49,11 +49,17 @@ import java.util.Map;
 public record SmockerMock(Request request, Response response) {
 
   @Serdeable
-  public record Request(String method, Map<String, String> headers, String path) {
-    public Request(String method, Map<String, String> headers, String path) {
+  public record Request(
+      String method, Map<String, String> headers, String path, RequestBodyMatch body) {
+    public Request(String method, Map<String, String> headers, String path, RequestBodyMatch body) {
       this.method = method;
       this.headers = headers;
       this.path = path;
+      this.body = body;
+    }
+
+    public Request(String method, Map<String, String> headers, String path) {
+      this(method, headers, path, null);
     }
 
     public Request(String method, String path) {
@@ -77,5 +83,31 @@ public record SmockerMock(Request request, Response response) {
     public Response(String body) {
       this(200, body);
     }
+  }
+
+  @Introspected
+  public record RequestBodyMatch(MatcherType matcher, String value) {}
+
+  /**
+   * See <a
+   * href="https://smocker.dev/technical-documentation/mock-definition.html#format-of-request-section">Mock
+   * Definition</a> for details about each match type
+   */
+  public enum MatcherType {
+    ShouldEqualJSON,
+    ShouldEqual,
+    ShouldNotEqual,
+    ShouldResemble,
+    ShouldNotResemble,
+    ShouldContainSubstring,
+    ShouldNotContainSubstring,
+    ShouldStartWith,
+    ShouldNotStartWith,
+    ShouldEndWith,
+    ShouldNotEndWith,
+    ShouldMatch,
+    ShouldNotMatch,
+    ShouldBeEmpty,
+    ShouldNotBeEmpty
   }
 }
