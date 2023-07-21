@@ -85,7 +85,7 @@ public record SmockerMock(Request request, Response response) {
     }
   }
 
-  @Introspected
+  @Serdeable
   public record RequestBodyMatch(MatcherType matcher, String value) {}
 
   /**
