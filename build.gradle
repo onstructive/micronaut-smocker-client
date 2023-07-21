@@ -2,6 +2,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
     id("io.micronaut.application") version "${micronautGradlePluginVersion}" apply false
     id("io.micronaut.library") version "${micronautGradlePluginVersion}" apply false
+    id("io.micronaut.aot") version "${micronautGradlePluginVersion}" apply false
 
     id 'ch.onstructive.gradle.release' version "${onstructiveGradlePluginVersion}" apply false
     id 'ch.onstructive.gradle.codestyle' version "${onstructiveGradlePluginVersion}" apply false
@@ -16,6 +17,7 @@ subprojects { subproject ->
     } else {
         apply plugin: 'io.micronaut.library'
     }
+    apply plugin: 'io.micronaut.aot'
     group = "io.wangler.micronaut.smocker"
 
     apply plugin: "ch.onstructive.gradle.codestyle"
@@ -33,16 +35,29 @@ subprojects { subproject ->
             incremental(true)
             annotations("io.wangler.micronaut.smocker.*")
         }
+        aot {
+            // Please review carefully the optimizations enabled below
+            // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+            optimizeServiceLoading = false
+            convertYamlToJava = false
+            precomputeOperations = true
+            cacheEnvironment = true
+            optimizeClassLoading = true
+            deduceEnvironment = true
+            optimizeNetty = true
+        }
     }
 
     dependencies {
         annotationProcessor("io.micronaut:micronaut-http-validation")
-        implementation("io.micronaut:micronaut-http-client")
-        implementation("io.micronaut:micronaut-jackson-databind")
-        implementation("jakarta.annotation:jakarta.annotation-api")
-        runtimeOnly("ch.qos.logback:logback-classic")
-        implementation("io.micronaut:micronaut-validation")
+        annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+        annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
 
+        implementation("io.micronaut:micronaut-http-client")
+        implementation("io.micronaut.serde:micronaut-serde-jackson")
+        implementation("io.micronaut.validation:micronaut-validation")
+        implementation("jakarta.validation:jakarta.validation-api")
+        runtimeOnly("ch.qos.logback:logback-classic")
     }
 }
 

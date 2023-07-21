@@ -23,7 +23,7 @@
  */
 package io.wangler.micronaut.smocker;
 
-import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import java.util.Map;
 
 /**
@@ -45,10 +45,10 @@ import java.util.Map;
  * ]
  * </pre>
  */
-@Introspected
+@Serdeable
 public record SmockerMock(Request request, Response response) {
 
-  @Introspected
+  @Serdeable
   public record Request(String method, Map<String, String> headers, String path) {
     public Request(String method, Map<String, String> headers, String path) {
       this.method = method;
@@ -61,7 +61,7 @@ public record SmockerMock(Request request, Response response) {
     }
   }
 
-  @Introspected
+  @Serdeable
   public record Response(int status, Map<String, String> headers, String body) {
 
     public Response(int status, Map<String, String> headers, String body) {

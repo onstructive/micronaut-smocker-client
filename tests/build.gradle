@@ -6,5 +6,6 @@ application {
 }
 
 dependencies {
+    runtimeOnly("org.yaml:snakeyaml")
     testImplementation project(":${rootProject.name}-client")
 }
