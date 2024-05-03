@@ -30,9 +30,9 @@ class SmockerClientSpec extends Specification {
         expect:
         with(version) {
             appName() == 'smocker'
-            buildVersion() == '0.18.2'
-            buildCommit() == '3f1407b50778e57f651d1ae3d06d1398765d0805'
-            buildDate() == '2022-05-05T11:09:56+0000'
+            buildVersion() == '0.18.5'
+            buildCommit() == 'f9c256e85f439852f840888b4d75ce2b7c8cf78c'
+            buildDate() == '2023-10-05T09:46:41+0000'
         }
     }
 

@@ -19,7 +19,7 @@ jobs:
 
     services:
       smocker:
-        image: thiht/smocker:0.18.2
+        image: thiht/smocker:0.18.5
         ports:
           - 8080:8080
           - 8081:8081

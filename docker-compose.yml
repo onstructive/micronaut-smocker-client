@@ -1,7 +1,6 @@
-version: "3.9"
 services:
   smocker:
-    image: thiht/smocker:0.18.2
+    image: thiht/smocker:0.18.5
     platform: linux/amd64
     container_name: smocker
     ports:
