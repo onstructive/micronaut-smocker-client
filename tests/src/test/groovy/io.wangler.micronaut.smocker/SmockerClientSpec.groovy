@@ -137,6 +137,40 @@ class SmockerClientSpec extends Specification {
         response == 'Hello World'
     }
 
+    void "add mock with query params and test"() {
+        given:
+        final String PATH = "/hello"
+
+
+        SmockerMock helloWorldMock = new SmockerMock(
+                new SmockerMock.Request('GET', ['Accept': TEXT_PLAIN], PATH, ['foo':'bar'], null),
+                new SmockerMock.Response(
+                        HttpStatus.OK.code,
+                        [CONTENT_TYPE: TEXT_PLAIN],
+                        "Hello World"
+                )
+        )
+
+        when:
+        SmockerResponse res = smockerClient.addMocks(true, 'my-session',
+                [
+                        helloWorldMock
+                ]
+        )
+
+        then:
+        noExceptionThrown()
+
+        and:
+        res.message() == 'Mocks registered successfully'
+
+        when:
+        String response = httpClient.toBlocking().retrieve(HttpRequest.GET("${PATH}?foo=bar").header(ACCEPT, TEXT_PLAIN))
+
+        then:
+        response == 'Hello World'
+    }
+
     private SmockerMock helloWorldMock(String PATH) {
         new SmockerMock(
                 new SmockerMock.Request('GET', ['Accept': TEXT_PLAIN], PATH),

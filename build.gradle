@@ -23,9 +23,8 @@ subprojects { subproject ->
     apply plugin: "ch.onstructive.gradle.codestyle"
 
     java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
-        }
+        sourceCompatibility = JavaVersion.toVersion("17")
+        targetCompatibility = JavaVersion.toVersion("17")
     }
 
     micronaut {

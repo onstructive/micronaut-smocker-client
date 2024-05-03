@@ -23,6 +23,7 @@
  */
 package io.wangler.micronaut.smocker;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.Map;
 
@@ -50,12 +51,13 @@ public record SmockerMock(Request request, Response response) {
 
   @Serdeable
   public record Request(
-      String method, Map<String, String> headers, String path, RequestBodyMatch body) {
+      String method,
+      Map<String, String> headers,
+      String path,
+      @JsonProperty("query_params") Map<String, String> queryParams,
+      RequestBodyMatch body) {
     public Request(String method, Map<String, String> headers, String path, RequestBodyMatch body) {
-      this.method = method;
-      this.headers = headers;
-      this.path = path;
-      this.body = body;
+      this(method, headers, path, null, body);
     }
 
     public Request(String method, Map<String, String> headers, String path) {
