@@ -10,7 +10,10 @@ import spock.lang.PendingFeature
 import spock.lang.Specification
 
 import static io.micronaut.http.HttpHeaders.ACCEPT
+import static io.micronaut.http.HttpHeaders.AUTHORIZATION
+import static io.micronaut.http.HttpHeaders.CONTENT_TYPE
 import static io.micronaut.http.MediaType.TEXT_PLAIN
+import static io.wangler.micronaut.smocker.SmockerMock.MatcherType.ShouldStartWith
 
 @MicronautTest
 class SmockerClientSpec extends Specification {
@@ -137,16 +140,16 @@ class SmockerClientSpec extends Specification {
         response == 'Hello World'
     }
 
-    void "add mock with query params and test"() {
+    void "Add mock with query params and test"() {
         given:
         final String PATH = "/hello"
 
 
         SmockerMock helloWorldMock = new SmockerMock(
-                new SmockerMock.Request('GET', ['Accept': TEXT_PLAIN], PATH, ['foo':'bar'], null),
+                new SmockerMock.Request('GET', [(ACCEPT): TEXT_PLAIN], PATH, ['foo': 'bar'], null),
                 new SmockerMock.Response(
                         HttpStatus.OK.code,
-                        [CONTENT_TYPE: TEXT_PLAIN],
+                        [(CONTENT_TYPE): TEXT_PLAIN],
                         "Hello World"
                 )
         )
@@ -171,12 +174,46 @@ class SmockerClientSpec extends Specification {
         response == 'Hello World'
     }
 
-    private SmockerMock helloWorldMock(String PATH) {
-        new SmockerMock(
-                new SmockerMock.Request('GET', ['Accept': TEXT_PLAIN], PATH),
+    void "Add mock with header matching"() {
+        given:
+        final String PATH = "/headertest"
+
+
+        SmockerMock helloWorldMock = new SmockerMock(
+                new SmockerMock.Request('GET', [(ACCEPT): TEXT_PLAIN, (AUTHORIZATION): new SmockerMock.MatchTuple(ShouldStartWith, 'Bearer')], PATH, [:], null),
                 new SmockerMock.Response(
                         HttpStatus.OK.code,
-                        [CONTENT_TYPE: TEXT_PLAIN],
+                        [(CONTENT_TYPE): TEXT_PLAIN],
+                        "Hello World"
+                )
+        )
+
+        when:
+        SmockerResponse res = smockerClient.addMocks(true, 'my-session',
+                [
+                        helloWorldMock
+                ]
+        )
+
+        then:
+        noExceptionThrown()
+
+        and:
+        res.message() == 'Mocks registered successfully'
+
+        when:
+        String response = httpClient.toBlocking().retrieve(HttpRequest.GET("${PATH}").header(ACCEPT, TEXT_PLAIN).header(AUTHORIZATION, "Bearer mytoken"))
+
+        then:
+        response == 'Hello World'
+    }
+
+    private SmockerMock helloWorldMock(String PATH) {
+        new SmockerMock(
+                new SmockerMock.Request('GET', [(ACCEPT): TEXT_PLAIN], PATH),
+                new SmockerMock.Response(
+                        HttpStatus.OK.code,
+                        [(CONTENT_TYPE): TEXT_PLAIN],
                         "Hello World"
                 )
         )

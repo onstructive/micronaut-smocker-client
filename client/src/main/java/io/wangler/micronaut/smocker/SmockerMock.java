@@ -23,9 +23,12 @@
  */
 package io.wangler.micronaut.smocker;
 
+import static io.wangler.micronaut.smocker.SmockerMock.MatcherType.ShouldEqual;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -52,12 +55,20 @@ public record SmockerMock(Request request, Response response) {
   @Serdeable
   public record Request(
       String method,
-      Map<String, String> headers,
+      Map<String, MatchTuple> headers,
       String path,
       @JsonProperty("query_params") Map<String, String> queryParams,
-      RequestBodyMatch body) {
-    public Request(String method, Map<String, String> headers, String path, RequestBodyMatch body) {
-      this(method, headers, path, null, body);
+      MatchTuple body) {
+    public Request(String method, Map<String, String> headers, String path, MatchTuple body) {
+      this(
+          method,
+          headers.entrySet().stream()
+              .collect(
+                  Collectors.toMap(
+                      Map.Entry::getKey, v -> new MatchTuple(ShouldEqual, v.getValue()))),
+          path,
+          null,
+          body);
     }
 
     public Request(String method, Map<String, String> headers, String path) {
@@ -88,7 +99,7 @@ public record SmockerMock(Request request, Response response) {
   }
 
   @Serdeable
-  public record RequestBodyMatch(MatcherType matcher, String value) {}
+  public record MatchTuple(MatcherType matcher, String value) {}
 
   /**
    * See <a
