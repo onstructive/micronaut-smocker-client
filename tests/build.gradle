@@ -7,5 +7,9 @@ application {
 
 dependencies {
     runtimeOnly("org.yaml:snakeyaml")
+    runtimeOnly("ch.qos.logback:logback-classic")
     testImplementation project(":${rootProject.name}-client")
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("io.micronaut.serde:micronaut-serde-jackson")
+    testImplementation("io.micronaut.validation:micronaut-validation")
 }
